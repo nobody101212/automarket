@@ -171,3 +171,13 @@ def get_models(request):
 def brand_list(request):
     brands = Brand.objects.annotate(car_count=Count('car')).order_by('name')
     return render(request, 'cars/brand_list.html', {'brands': brands})
+
+@login_required
+def car_toggle_active(request, pk):
+    car = get_object_or_404(Car, pk=pk, seller=request.user)
+    if request.method == 'POST':
+        car.is_active = not car.is_active
+        car.save()
+        status = 'активировано' if car.is_active else 'деактивировано'
+        messages.success(request, f'Объявление {status}!')
+    return redirect('accounts:my_ads')
