@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Мои объявления — AutoMarket KG{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="profile-layout">
+    <aside class="profile-sidebar">
+      <div class="profile-avatar-big">👤</div>
+      <h3>{{ user.first_name|default:user.username }}</h3>
+      <div class="profile-nav">
+        <a href="/accounts/profile/">👤 Профиль</a>
+        <a href="/accounts/my-ads/" style="color:var(--red);background:var(--light)">🚗 Мои объявления</a>
+        <a href="/accounts/favorites/">❤️ Избранное</a>
+        <a href="/accounts/logout/">🚪 Выйти</a>
+      </div>
+    </aside>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h2 style="font-family:var(--font-head);font-size:20px;font-weight:800">Мои объявления</h2>
+        <a href="/cars/car/create/" class="btn-primary">+ Добавить</a>
+      </div>
+      {% if cars %}
+      <div class="my-ads-grid">
+        {% for car in cars %}
+        <div class="ad-card">
+          <div class="ad-card-img">
+            {% with img=car.get_main_image %}{% if img %}<img src="{{ img.image.url }}" alt="">{% else %}<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:40px">🚗</div>{% endif %}{% endwith %}
+          </div>
+          <div class="ad-card-body">
+            <div style="font-weight:700;margin-bottom:4px">{{ car }}</div>
+            <div style="font-family:var(--font-head);color:var(--red);font-weight:900;font-size:16px">{{ car.price }} сом</div>
+            <div style="font-size:12px;color:var(--gray);margin-top:4px">📍 {{ car.city }} · 👁 {{ car.views_count }}</div>
+            <div class="ad-actions">
+              <a href="{{ car.get_absolute_url }}" class="btn-edit">Просмотр</a>
+              <a href="/cars/car/{{ car.pk }}/edit/" class="btn-edit">✏️ Изменить</a>
+              <a href="/cars/car/{{ car.pk }}/delete/" class="btn-del">🗑️</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <span class="icon">🚗</span>
+        <h3>Объявлений нет</h3>
+        <p>Разместите первое объявление о продаже авто</p>
+        <a href="/cars/car/create/" class="btn-primary" style="display:inline-block;margin-top:16px">+ Подать объявление</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

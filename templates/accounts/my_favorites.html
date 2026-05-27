@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Избранное — AutoMarket KG{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="profile-layout">
+    <aside class="profile-sidebar">
+      <div class="profile-avatar-big">👤</div>
+      <h3>{{ user.first_name|default:user.username }}</h3>
+      <div class="profile-nav">
+        <a href="/accounts/profile/">👤 Профиль</a>
+        <a href="/accounts/my-ads/">🚗 Мои объявления</a>
+        <a href="/accounts/favorites/" style="color:var(--red);background:var(--light)">❤️ Избранное</a>
+        <a href="/accounts/logout/">🚪 Выйти</a>
+      </div>
+    </aside>
+    <div>
+      <h2 style="font-family:var(--font-head);font-size:20px;font-weight:800;margin-bottom:20px">❤️ Избранное</h2>
+      {% if favorites %}
+      <div class="cars-grid">
+        {% for fav in favorites %}{% include 'cars/partials/car_card.html' with car=fav.car %}{% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <span class="icon">❤️</span>
+        <h3>Нет избранных</h3>
+        <p>Сохраняйте понравившиеся авто</p>
+        <a href="/cars/" class="btn-primary" style="display:inline-block;margin-top:16px">Смотреть объявления</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

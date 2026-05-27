@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}{% if action == 'create' %}Подать объявление{% else %}Редактировать{% endif %} — AutoMarket KG{% endblock %}
+{% block content %}
+<div class="container">
+<div class="form-page">
+  <h1>{% if action == 'create' %}🚗 Подать объявление{% else %}✏️ Редактировать объявление{% endif %}</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-section">
+      <h3>Основная информация</h3>
+      <div class="form-row">
+        <div class="form-group"><label>Марка *</label>{{ form.brand }}</div>
+        <div class="form-group"><label>Модель *</label>{{ form.model }}</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Год выпуска *</label>{{ form.year }}</div>
+        <div class="form-group"><label>Состояние *</label>{{ form.condition }}</div>
+      </div>
+    </div>
+    <div class="form-section">
+      <h3>Технические характеристики</h3>
+      <div class="form-row">
+        <div class="form-group"><label>Объём двигателя (л) *</label>{{ form.engine_volume }}</div>
+        <div class="form-group"><label>Тип топлива *</label>{{ form.fuel_type }}</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>КПП *</label>{{ form.transmission }}</div>
+        <div class="form-group"><label>Привод *</label>{{ form.drive }}</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Пробег (км)</label>{{ form.mileage }}</div>
+        <div class="form-group"><label>Цвет</label>{{ form.color }}</div>
+      </div>
+    </div>
+    <div class="form-section">
+      <h3>Цена и контакты</h3>
+      <div class="form-row">
+        <div class="form-group"><label>Цена (сом) *</label>{{ form.price }}</div>
+        <div class="form-group"><label>Телефон *</label>{{ form.phone }}</div>
+      </div>
+      <div class="form-group"><label>Город</label>{{ form.city }}</div>
+    </div>
+    <div class="form-section">
+      <h3>Описание и фото</h3>
+      <div class="form-group"><label>Описание</label>{{ form.description }}</div>
+      <div class="form-group">
+        <label>Фотографии</label>
+        <input type="file" name="images" multiple accept="image/*" class="form-control">
+        <div class="help-text">Первое фото будет главным. Максимум 10 фото.</div>
+      </div>
+      {% if car and car.images.all %}
+      <div style="margin-top:12px">
+        <label style="font-size:13px;font-weight:600;margin-bottom:8px;display:block">Текущие фото:</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          {% for img in car.images.all %}<img src="{{ img.image.url }}" style="width:80px;height:60px;object-fit:cover;border-radius:6px">{% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    <button type="submit" class="btn-primary" style="font-size:16px;padding:14px 32px;width:100%;border:none;cursor:pointer">
+      {% if action == 'create' %}✅ Опубликовать объявление{% else %}💾 Сохранить изменения{% endif %}
+    </button>
+  </form>
+</div>
+</div>
+{% endblock %}

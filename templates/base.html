@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}AutoMarket KG{% endblock %}</title>
+  {% load static %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <div class="container">
+      <span>📍 Кыргызстан</span>
+      <div class="header-links">
+        <a href="/cars/?condition=new">Новые авто</a>
+        <a href="/cars/?condition=used">С пробегом</a>
+        <a href="/cars/brands/">Марки</a>
+      </div>
+    </div>
+  </div>
+  <div class="header-main">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <span class="logo-icon">🚗</span>
+        <div>
+          <span class="logo-text">AutoMarket</span>
+          <span class="logo-sub">KG</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <a href="/cars/" class="nav-link">Объявления</a>
+        <a href="/cars/brands/" class="nav-link">Марки авто</a>
+        {% if user.is_authenticated %}
+        <a href="/accounts/my-ads/" class="nav-link">Мои авто</a>
+        <a href="/accounts/favorites/" class="nav-link">❤️ Избранное</a>
+        {% endif %}
+      </nav>
+      <div class="header-actions">
+        {% if user.is_authenticated %}
+          <a href="/accounts/profile/" class="btn-profile">👤 {{ user.first_name|default:user.username }}</a>
+          <a href="/cars/car/create/" class="btn-primary">+ Подать объявление</a>
+          <a href="/accounts/logout/" class="btn-logout">Выйти</a>
+        {% else %}
+          <a href="/accounts/login/" class="btn-outline">Войти</a>
+          <a href="/accounts/register/" class="btn-primary">Регистрация</a>
+        {% endif %}
+      </div>
+      <button class="burger" id="burger">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="/cars/">Объявления</a>
+  <a href="/cars/brands/">Марки авто</a>
+  {% if user.is_authenticated %}
+  <a href="/cars/car/create/">+ Подать объявление</a>
+  <a href="/accounts/my-ads/">Мои объявления</a>
+  <a href="/accounts/favorites/">Избранное</a>
+  <a href="/accounts/profile/">Профиль</a>
+  <a href="/accounts/logout/">Выйти</a>
+  {% else %}
+  <a href="/accounts/login/">Войти</a>
+  <a href="/accounts/register/">Регистрация</a>
+  {% endif %}
+</div>
+
+{% if messages %}
+<div class="messages-container">
+  {% for msg in messages %}
+  <div class="alert alert-{{ msg.tags }}">{{ msg }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<main>{% block content %}{% endblock %}</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="logo">
+          <span class="logo-icon">🚗</span>
+          <div><span class="logo-text" style="color:white">AutoMarket</span><span class="logo-sub">KG</span></div>
+        </a>
+        <p>Крупнейшая площадка по купле-продаже автомобилей в Кыргызстане</p>
+      </div>
+      <div class="footer-col">
+        <h4>Покупателям</h4>
+        <a href="/cars/">Все объявления</a>
+        <a href="/cars/?condition=new">Новые авто</a>
+        <a href="/cars/?condition=used">С пробегом</a>
+        <a href="/cars/brands/">Марки</a>
+      </div>
+      <div class="footer-col">
+        <h4>Продавцам</h4>
+        <a href="/cars/car/create/">Подать объявление</a>
+        <a href="/accounts/my-ads/">Мои объявления</a>
+      </div>
+      <div class="footer-col">
+        <h4>Контакты</h4>
+        <p>📞 +996 312 000 000</p>
+        <p>✉️ info@automarket.kg</p>
+        <p>📍 г. Бишкек</p>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 AutoMarket KG. Все права защищены.</div>
+  </div>
+</footer>
+
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

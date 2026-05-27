@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}Объявления — AutoMarket KG{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="breadcrumb mt-20"><a href="/">Главная</a> / Объявления</div>
+  <h1 class="page-title">Купить автомобиль</h1>
+  <div class="page-layout">
+
+    <aside class="filters-sidebar">
+      <h3>🔧 Фильтры</h3>
+      <form method="get">
+        <div class="filter-group">
+          <label>Марка</label>
+          <select name="brand" class="filter-select" id="id_brand">
+            <option value="">Все марки</option>
+            {% for brand in brands %}
+            <option value="{{ brand.id }}" {% if current_filters.brand == brand.id|stringformat:"s" %}selected{% endif %}>{{ brand.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Модель</label>
+          <select name="model" class="filter-select" id="id_model">
+            <option value="">Все модели</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Год выпуска</label>
+          <div class="filter-row">
+            <input type="number" name="year_from" class="filter-input" placeholder="От" value="{{ current_filters.year_from }}">
+            <input type="number" name="year_to" class="filter-input" placeholder="До" value="{{ current_filters.year_to }}">
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Цена (сом)</label>
+          <div class="filter-row">
+            <input type="number" name="price_from" class="filter-input" placeholder="От" value="{{ current_filters.price_from }}">
+            <input type="number" name="price_to" class="filter-input" placeholder="До" value="{{ current_filters.price_to }}">
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Состояние</label>
+          <select name="condition" class="filter-select">
+            <option value="">Любое</option>
+            <option value="new" {% if current_filters.condition == 'new' %}selected{% endif %}>Новый</option>
+            <option value="used" {% if current_filters.condition == 'used' %}selected{% endif %}>С пробегом</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>КПП</label>
+          <select name="transmission" class="filter-select">
+            <option value="">Любая</option>
+            <option value="auto">Автомат</option>
+            <option value="manual">Механика</option>
+            <option value="robot">Робот</option>
+            <option value="variator">Вариатор</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Топливо</label>
+          <select name="fuel_type" class="filter-select">
+            <option value="">Любое</option>
+            <option value="petrol">Бензин</option>
+            <option value="diesel">Дизель</option>
+            <option value="gas">Газ</option>
+            <option value="hybrid">Гибрид</option>
+            <option value="electric">Электро</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Город</label>
+          <input type="text" name="city" class="filter-input" placeholder="Бишкек" value="{{ current_filters.city }}">
+        </div>
+        <button type="submit" class="btn-filter-apply">Применить</button>
+        <a href="/cars/" class="btn-filter-reset">Сбросить фильтры</a>
+      </form>
+    </aside>
+
+    <div>
+      <div class="list-header">
+        <div class="result-count">Найдено: <strong>{{ total_count }}</strong> авто</div>
+        <select class="sort-select" onchange="location.href='?sort='+this.value">
+          <option value="-created_at" {% if sort == '-created_at' %}selected{% endif %}>Сначала новые</option>
+          <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Цена: дешевле</option>
+          <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Цена: дороже</option>
+          <option value="year_desc" {% if sort == 'year_desc' %}selected{% endif %}>Год: новее</option>
+          <option value="year_asc" {% if sort == 'year_asc' %}selected{% endif %}>Год: старее</option>
+        </select>
+      </div>
+
+      {% if cars %}
+      <div class="cars-grid">
+        {% for car in cars %}{% include 'cars/partials/car_card.html' with car=car %}{% endfor %}
+      </div>
+      {% if cars.has_other_pages %}
+      <div class="pagination">
+        {% if cars.has_previous %}<a href="?page={{ cars.previous_page_number }}" class="page-link">← Пред</a>{% endif %}
+        {% for num in cars.paginator.page_range %}
+          {% if cars.number == num %}<span class="page-link active">{{ num }}</span>
+          {% elif num > cars.number|add:'-3' and num < cars.number|add:'3' %}<a href="?page={{ num }}" class="page-link">{{ num }}</a>{% endif %}
+        {% endfor %}
+        {% if cars.has_next %}<a href="?page={{ cars.next_page_number }}" class="page-link">След →</a>{% endif %}
+      </div>
+      {% endif %}
+      {% else %}
+      <div class="empty-state">
+        <span class="icon">🔍</span>
+        <h3>Ничего не найдено</h3>
+        <p>Попробуйте изменить параметры поиска</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

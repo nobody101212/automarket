@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Профиль — AutoMarket KG{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="profile-layout">
+    <aside class="profile-sidebar">
+      <div class="profile-avatar-big">{% if profile.avatar %}<img src="{{ profile.avatar.url }}" alt="">{% else %}👤{% endif %}</div>
+      <h3>{{ user.first_name|default:user.username }}</h3>
+      <p>📍 {{ profile.city|default:'Бишкек' }}</p>
+      <div class="profile-nav">
+        <a href="/accounts/profile/" style="color:var(--red);background:var(--light)">👤 Профиль</a>
+        <a href="/accounts/my-ads/">🚗 Мои объявления</a>
+        <a href="/accounts/favorites/">❤️ Избранное</a>
+        <a href="/accounts/logout/">🚪 Выйти</a>
+      </div>
+    </aside>
+    <div>
+      <div class="form-page" style="margin:0">
+        <h1>Редактировать профиль</h1>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-row">
+            <div class="form-group"><label>Имя</label>{{ form.first_name }}</div>
+            <div class="form-group"><label>Фамилия</label>{{ form.last_name }}</div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Телефон</label>{{ form.phone }}</div>
+            <div class="form-group"><label>Город</label>{{ form.city }}</div>
+          </div>
+          <div class="form-group"><label>О себе</label>{{ form.bio }}</div>
+          <div class="form-group"><label>Фото профиля</label>{{ form.avatar }}</div>
+          <button type="submit" class="btn-primary" style="border:none;cursor:pointer;padding:12px 28px">Сохранить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

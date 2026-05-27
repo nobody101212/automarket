@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %}AutoMarket KG — Купить и продать авто в Кыргызстане{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="container hero-inner">
+    <div>
+      <span class="hero-badge">🇰🇬 Кыргызстан №1</span>
+      <h1>Найди своё идеальное <span>авто</span> в КР</h1>
+      <p>Тысячи проверенных объявлений от частных лиц и дилеров по всему Кыргызстану</p>
+      <div class="hero-stats">
+        <div class="stat-item"><strong>{{ total_cars }}+</strong><span>Объявлений</span></div>
+        <div class="stat-item"><strong>50+</strong><span>Марок</span></div>
+        <div class="stat-item"><strong>7</strong><span>Городов</span></div>
+      </div>
+    </div>
+    <div class="hero-car-visual">🚗</div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="search-box">
+    <div class="search-box-title">🔍 Поиск автомобиля</div>
+    <form action="/cars/" method="get">
+      <div class="search-row">
+        <div class="search-field">
+          <label>Марка</label>
+          <select name="brand" class="filter-select">
+            <option value="">Все марки</option>
+            {% for brand in brands %}
+            <option value="{{ brand.id }}">{{ brand.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="search-field">
+          <label>Цена от (сом)</label>
+          <input type="number" name="price_from" class="filter-input" placeholder="200 000">
+        </div>
+        <div class="search-field">
+          <label>Цена до (сом)</label>
+          <input type="number" name="price_to" class="filter-input" placeholder="1 000 000">
+        </div>
+        <div class="search-field">
+          <label>Состояние</label>
+          <select name="condition" class="filter-select">
+            <option value="">Любое</option>
+            <option value="new">Новый</option>
+            <option value="used">С пробегом</option>
+          </select>
+        </div>
+        <div class="search-field">
+          <label>&nbsp;</label>
+          <button type="submit" class="btn-search">Найти 🔍</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% if featured_cars %}
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">⭐ Рекомендуемые <span>авто</span></h2>
+      <a href="/cars/" class="see-all">Смотреть все →</a>
+    </div>
+    <div class="cars-grid">
+      {% for car in featured_cars %}{% include 'cars/partials/car_card.html' with car=car %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section" style="background: var(--white); padding: 50px 0;">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Авто по <span>маркам</span></h2>
+      <a href="/cars/brands/" class="see-all">Все марки →</a>
+    </div>
+    <div class="brands-grid">
+      {% for brand in brands %}
+      <a href="/cars/?brand={{ brand.id }}" class="brand-card">
+        <div class="brand-card-icon">🚘</div>
+        <div class="brand-card-name">{{ brand.name }}</div>
+        <div class="brand-card-count">{{ brand.car_count }} авто</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">🆕 Новые <span>объявления</span></h2>
+      <a href="/cars/" class="see-all">Смотреть все →</a>
+    </div>
+    <div class="cars-grid">
+      {% for car in recent_cars %}{% include 'cars/partials/car_card.html' with car=car %}{% endfor %}
+    </div>
+  </div>
+</section>
+
+<section style="background: linear-gradient(135deg, var(--dark) 0%, #1a0a14 100%); padding: 60px 0; text-align: center; color: white;">
+  <div class="container">
+    <h2 style="font-family: var(--font-head); font-size: 32px; font-weight: 900; margin-bottom: 12px;">Продайте авто <span style="color: var(--red);">быстро</span></h2>
+    <p style="color: rgba(255,255,255,0.7); font-size: 16px; margin-bottom: 28px;">Разместите объявление бесплатно</p>
+    <a href="/cars/car/create/" class="btn-primary" style="font-size: 16px; padding: 14px 32px;">+ Подать объявление</a>
+  </div>
+</section>
+
+{% endblock %}

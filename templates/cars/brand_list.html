@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Марки автомобилей — AutoMarket KG{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="breadcrumb mt-20"><a href="/">Главная</a> / Марки</div>
+  <h1 class="page-title">Марки автомобилей</h1>
+  <div class="brands-grid" style="margin-top:24px">
+    {% for brand in brands %}
+    <a href="/cars/?brand={{ brand.id }}" class="brand-card">
+      <div class="brand-card-icon">🚘</div>
+      <div class="brand-card-name">{{ brand.name }}</div>
+      <div class="brand-card-count">{{ brand.car_count }} авто</div>
+    </a>
+    {% empty %}
+    <div class="empty-state"><span class="icon">🚗</span><h3>Марки не добавлены</h3></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

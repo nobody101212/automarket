@@ -1,0 +1,30 @@
+{% load static %}
+<a href="{{ car.get_absolute_url }}" class="car-card">
+  <div class="car-card-img">
+    {% with img=car.get_main_image %}
+    {% if img %}
+      <img src="{{ img.image.url }}" alt="{{ car }}">
+    {% else %}
+      <div class="no-img">🚗</div>
+    {% endif %}
+    {% endwith %}
+    <span class="car-badge {% if car.condition == 'new' %}new{% endif %}">{{ car.get_condition_display }}</span>
+    {% if user.is_authenticated %}
+    <button class="fav-btn" data-car-id="{{ car.id }}" onclick="event.preventDefault()">🤍</button>
+    {% endif %}
+  </div>
+  <div class="car-card-body">
+    <div class="car-title">{{ car.brand }} {{ car.model }} {{ car.year }}</div>
+    <div class="car-price">{{ car.price }} сом</div>
+    <div class="car-specs">
+      <span class="spec-tag">{{ car.engine_volume }} л</span>
+      <span class="spec-tag">{{ car.get_transmission_display }}</span>
+      <span class="spec-tag">{{ car.get_fuel_type_display }}</span>
+      {% if car.mileage > 0 %}<span class="spec-tag">{{ car.mileage }} км</span>{% endif %}
+    </div>
+    <div class="car-meta">
+      <span>📍 {{ car.city }}</span>
+      <span>👁 {{ car.views_count }}</span>
+    </div>
+  </div>
+</a>

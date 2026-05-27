@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация — AutoMarket KG{% endblock %}
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>Регистрация 🚗</h1>
+    <p>Создайте аккаунт, чтобы покупать и продавать авто</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group"><label>Имя</label>{{ form.first_name }}{% for e in form.first_name.errors %}<div class="error-text">{{ e }}</div>{% endfor %}</div>
+        <div class="form-group"><label>Фамилия</label>{{ form.last_name }}</div>
+      </div>
+      <div class="form-group"><label>Логин *</label>{{ form.username }}{% for e in form.username.errors %}<div class="error-text">{{ e }}</div>{% endfor %}</div>
+      <div class="form-group"><label>Email *</label>{{ form.email }}{% for e in form.email.errors %}<div class="error-text">{{ e }}</div>{% endfor %}</div>
+      <div class="form-group"><label>Телефон</label>{{ form.phone }}</div>
+      <div class="form-group"><label>Город</label>{{ form.city }}</div>
+      <div class="form-row">
+        <div class="form-group"><label>Пароль *</label>{{ form.password1 }}{% for e in form.password1.errors %}<div class="error-text">{{ e }}</div>{% endfor %}</div>
+        <div class="form-group"><label>Подтверждение *</label>{{ form.password2 }}{% for e in form.password2.errors %}<div class="error-text">{{ e }}</div>{% endfor %}</div>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;padding:13px;font-size:16px;border:none;cursor:pointer">Зарегистрироваться</button>
+    </form>
+    <div class="auth-footer">Уже есть аккаунт? <a href="/accounts/login/">Войти</a></div>
+  </div>
+</div>
+{% endblock %}

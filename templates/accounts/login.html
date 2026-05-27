@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Вход — AutoMarket KG{% endblock %}
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>Вход 👋</h1>
+    <p>Войдите в свой аккаунт AutoMarket KG</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group"><label>Логин</label>{{ form.username }}</div>
+      <div class="form-group"><label>Пароль</label>{{ form.password }}</div>
+      <button type="submit" class="btn-primary" style="width:100%;padding:13px;font-size:16px;border:none;cursor:pointer">Войти</button>
+    </form>
+    <div class="auth-footer">Нет аккаунта? <a href="/accounts/register/">Зарегистрироваться</a></div>
+  </div>
+</div>
+{% endblock %}

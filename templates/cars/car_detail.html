@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}{{ car }} — AutoMarket KG{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="breadcrumb mt-20">
+    <a href="/">Главная</a> / <a href="/cars/">Объявления</a> / {{ car.brand }} {{ car.model }}
+  </div>
+  <div class="detail-layout">
+    <div>
+      {% with images=car.images.all %}
+      <div class="main-photo">
+        {% if images %}<img id="mainImg" src="{{ images.first.image.url }}" alt="{{ car }}">
+        {% else %}<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:80px">🚗</div>{% endif %}
+      </div>
+      {% if images.count > 1 %}
+      <div class="thumb-strip">
+        {% for img in images %}
+        <img src="{{ img.image.url }}" alt="" class="{% if forloop.first %}active{% endif %}"
+             onclick="document.getElementById('mainImg').src='{{ img.image.url }}';this.parentElement.querySelectorAll('img').forEach(i=>i.classList.remove('active'));this.classList.add('active')">
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endwith %}
+
+      <div class="detail-specs">
+        <h2>{{ car.brand }} {{ car.model }} {{ car.year }}</h2>
+        <div class="detail-price">{{ car.price }} сом</div>
+        <table class="specs-table">
+          <tr><td>Год выпуска</td><td>{{ car.year }}</td></tr>
+          <tr><td>Пробег</td><td>{% if car.mileage %}{{ car.mileage }} км{% else %}Новый{% endif %}</td></tr>
+          <tr><td>Двигатель</td><td>{{ car.engine_volume }} л · {{ car.get_fuel_type_display }}</td></tr>
+          <tr><td>КПП</td><td>{{ car.get_transmission_display }}</td></tr>
+          <tr><td>Привод</td><td>{{ car.get_drive_display }}</td></tr>
+          <tr><td>Состояние</td><td>{{ car.get_condition_display }}</td></tr>
+          <tr><td>Цвет</td><td>{{ car.get_color_display }}</td></tr>
+          <tr><td>Город</td><td>{{ car.city }}</td></tr>
+          <tr><td>Просмотры</td><td>{{ car.views_count }}</td></tr>
+          <tr><td>Дата подачи</td><td>{{ car.created_at|date:"d.m.Y" }}</td></tr>
+        </table>
+      </div>
+
+      {% if car.description %}
+      <div class="detail-desc" style="margin-top:16px">
+        <h3>📝 Описание</h3>
+        <p style="font-size:14px;line-height:1.8;color:#444">{{ car.description|linebreaks }}</p>
+      </div>
+      {% endif %}
+
+      {% if user == car.seller %}
+      <div style="margin-top:16px;display:flex;gap:10px">
+        <a href="/cars/car/{{ car.pk }}/edit/" class="btn-primary">✏️ Редактировать</a>
+        <a href="/cars/car/{{ car.pk }}/delete/" class="btn-del">🗑️ Удалить</a>
+      </div>
+      {% endif %}
+
+      <div class="detail-desc" style="margin-top:20px">
+        <h3>💬 Отзывы ({{ reviews.count }})</h3>
+        {% for review in reviews %}
+        <div style="padding:12px 0;border-bottom:1px solid #f5f5f5">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <strong style="font-size:14px">{{ review.user.first_name|default:review.user.username }}</strong>
+            <span style="color:#f0a500">{% for i in "12345" %}{% if forloop.counter <= review.rating %}⭐{% endif %}{% endfor %}</span>
+          </div>
+          <p style="font-size:14px;color:#555">{{ review.text }}</p>
+          <small style="color:var(--gray)">{{ review.created_at|date:"d.m.Y" }}</small>
+        </div>
+        {% empty %}<p style="color:var(--gray);font-size:14px">Отзывов пока нет</p>{% endfor %}
+
+        {% if user.is_authenticated %}
+        <form method="post" style="margin-top:20px">
+          {% csrf_token %}
+          <div class="form-group">{{ review_form.text }}</div>
+          <div class="form-group">{{ review_form.rating }}</div>
+          <button type="submit" class="btn-primary">Отправить отзыв</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+
+    <div>
+      <div class="seller-card">
+        <h3>Продавец</h3>
+        <div class="seller-info">
+          <div class="seller-avatar">👤</div>
+          <div>
+            <div class="seller-name">{{ car.seller.first_name|default:car.seller.username }}</div>
+            <div class="seller-city">📍 {{ car.city }}</div>
+          </div>
+        </div>
+        <a href="tel:{{ car.phone }}" class="btn-call">📞 {{ car.phone }}</a>
+        {% if user.is_authenticated %}
+        <button class="btn-fav-detail" data-car-id="{{ car.pk }}">
+          {% if is_favorite %}❤️ В избранном{% else %}🤍 В избранное{% endif %}
+        </button>
+        {% endif %}
+        <a href="/accounts/seller/{{ car.seller.pk }}/" style="display:block;text-align:center;margin-top:12px;font-size:13px;color:var(--gray)">Все объявления продавца</a>
+      </div>
+
+      <div style="background:#fff8f0;border-radius:10px;padding:16px;border:1px solid #ffe0b2;font-size:13px">
+        <strong style="color:#e65100">⚠️ Правила безопасности</strong>
+        <ul style="margin-top:8px;padding-left:16px;color:#555;line-height:2">
+          <li>Встречайтесь в общественных местах</li>
+          <li>Проверяйте документы на авто</li>
+          <li>Не переводите деньги авансом</li>
+          <li>Проверьте авто в сервисе</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  {% if similar_cars %}
+  <section class="section" style="padding:40px 0">
+    <div class="section-header"><h2 class="section-title">Похожие <span>авто</span></h2></div>
+    <div class="cars-grid">
+      {% for c in similar_cars %}{% include 'cars/partials/car_card.html' with car=c %}{% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

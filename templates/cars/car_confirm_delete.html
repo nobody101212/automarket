@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container" style="max-width:500px;margin:60px auto;text-align:center">
+  <div class="form-page">
+    <div style="font-size:60px;margin-bottom:16px">🗑️</div>
+    <h2 style="font-family:var(--font-head);font-size:22px;margin-bottom:12px">Удалить объявление?</h2>
+    <p style="color:var(--gray);margin-bottom:28px">{{ car.brand }} {{ car.model }} {{ car.year }}</p>
+    <form method="post" style="display:flex;gap:12px;justify-content:center">
+      {% csrf_token %}
+      <button type="submit" class="btn-primary" style="background:#c0392b;border:none;cursor:pointer">Удалить</button>
+      <a href="{{ car.get_absolute_url }}" class="btn-outline">Отмена</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

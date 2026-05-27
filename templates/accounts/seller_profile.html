@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}{{ seller.first_name|default:seller.username }} — AutoMarket KG{% endblock %}
+{% block content %}
+<div class="container" style="padding-top:32px">
+  <div style="background:var(--white);border-radius:16px;padding:32px;box-shadow:var(--shadow);border:1px solid #e8ecef;margin-bottom:28px;display:flex;align-items:center;gap:24px">
+    <div class="profile-avatar-big" style="width:80px;height:80px;font-size:36px">👤</div>
+    <div>
+      <h1 style="font-family:var(--font-head);font-size:22px;font-weight:800">{{ seller.first_name|default:seller.username }}</h1>
+      <p style="color:var(--gray);margin-top:4px">📍 {{ profile.city|default:'Кыргызстан' }}</p>
+      <p style="color:var(--gray);font-size:13px">На сайте с {{ seller.date_joined|date:"Y" }} года · {{ cars.count }} объявлений</p>
+    </div>
+  </div>
+  <h2 style="font-family:var(--font-head);font-size:18px;font-weight:800;margin-bottom:20px">Объявления продавца</h2>
+  {% if cars %}
+  <div class="cars-grid">{% for car in cars %}{% include 'cars/partials/car_card.html' with car=car %}{% endfor %}</div>
+  {% else %}
+  <div class="empty-state"><span class="icon">🚗</span><h3>Нет активных объявлений</h3></div>
+  {% endif %}
+</div>
+{% endblock %}
